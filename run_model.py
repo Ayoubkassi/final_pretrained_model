@@ -119,68 +119,87 @@ class CustomDataset(utils.Dataset):
             super(self.__class__, self).image_reference(image_id)
     
 
-    
-# Inspect the model in training or inference modes values: 'inference' or 'training'
-TEST_MODE = "inference"
-ROOT_DIR = "/dataset"
-
 def get_ax(rows=1, cols=1, size=16):
   """Return a Matplotlib Axes array to be used in all visualizations in the notebook.  Provide a central point to control graph sizes. Adjust the size attribute to control how big to render images"""
-  _, ax = plt.subplots(rows, cols, figsize=(size*cols, size*rows))
-  return ax
+      _, ax = plt.subplots(rows, cols, figsize=(size*cols, size*rows))
+      return ax
+
+
+def treeSegmentation():
+    
+# Inspect the model in training or inference modes values: 'inference' or 'training'
+    TEST_MODE = "inference"
+    ROOT_DIR = "/dataset"
+
+    
 
 
 
 # Load validation dataset
 # Must call before using the dataset
-CUSTOM_DIR = "/dataset"
-dataset = CustomDataset()
-dataset.load_custom(CUSTOM_DIR, "val")
-dataset.prepare()
-print("Images: {}\nClasses: {}".format(len(dataset.image_ids), dataset.class_names))
+    CUSTOM_DIR = "/dataset"
+    dataset = CustomDataset()
+    dataset.load_custom(CUSTOM_DIR, "val")
+    dataset.prepare()
+    print("Images: {}\nClasses: {}".format(len(dataset.image_ids), dataset.class_names))
 
 
 
 
-ROOT_DIR = "/"
+    ROOT_DIR = "/"
 
-DEFAULT_LOGS_DIR = os.path.join(ROOT_DIR, "logs")
+    DEFAULT_LOGS_DIR = os.path.join(ROOT_DIR, "logs")
 
-MODEL_DIR = os.path.join(ROOT_DIR, "logs")
+    MODEL_DIR = os.path.join(ROOT_DIR, "logs")
 
-config = CustomConfig()
-#LOAD MODEL. Create model in inference mode
-model = modellib.MaskRCNN(mode="inference", model_dir=MODEL_DIR, config=config)
+    config = CustomConfig()
+    #LOAD MODEL. Create model in inference mode
+    model = modellib.MaskRCNN(mode="inference", model_dir=MODEL_DIR, config=config)
 
-WEIGHTS_PATH = "/mask_rcnn_object_0004.h5"   
-
-
-# Load COCO weights Or, load the last model you trained
-weights_path = WEIGHTS_PATH
-# Load weights
-print("Loading weights ", weights_path)
-model.load_weights(weights_path, by_name=True)
+    WEIGHTS_PATH = "/mask_rcnn_object_0004.h5"   
 
 
-#here we start our function
+    # Load COCO weights Or, load the last model you trained
+    weights_path = WEIGHTS_PATH
+    # Load weights
+    print("Loading weights ", weights_path)
+    model.load_weights(weights_path, by_name=True)
+
+
+    #here we start our function
 
 
 
-print("Images: {}\nClasses: {}".format(len(dataset.image_ids), dataset.class_names))
+    print("Images: {}\nClasses: {}".format(len(dataset.image_ids), dataset.class_names))
 
-# This is for predicting images which are not present in dataset
-path_to_new_image = '/content/9.jpg'
-image1 = mpimg.imread(path_to_new_image)
+    # This is for predicting images which are not present in dataset
+    path_to_new_image = 'static/img/img_now.jpg'
+    image1 = mpimg.imread(path_to_new_image)
 
-# Run object detection
-#print(len([image1])
-results1 = model.detect([image1], verbose=1)
+    # Run object detection
+    #print(len([image1])
+    results1 = model.detect([image1], verbose=1)
 
-# Display results
-ax = get_ax(1)
-r1 = results1[0]
-visualize.display_instances(image1, r1['rois'], r1['masks'], r1['class_ids'],
-dataset.class_names, r1['scores'], ax=ax, title="Predictions1")
+    # Display results
+    ax = get_ax(1)
+    r1 = results1[0]
+    import sys
+    sys.path.append("/Mask_RCNN")
+    object_count = len(r1["class_ids"])
+    for i in range(object_count):
+        mask = r1["masks"][:, :, i]
+        colors = random_colors(80)
+        from mrcnn.visualize import apply_mask , random_colors
+        image3 = image1.copy()
+        image2 = apply_mask(image3,mask,colors[0])
+        image1 = image2.copy()
+        
+    return image2
+
+
+#from matplotlib import pyplot
+#pyplot.imshow(image2)
+#pyplot.show()
 
 
 
