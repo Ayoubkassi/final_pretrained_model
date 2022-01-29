@@ -7,6 +7,7 @@ from flask import Flask, render_template, request, make_response
 from datetime import datetime
 from functools import wraps, update_wrapper
 from shutil import copyfile
+import run_model
 
 app = Flask(__name__)
 
@@ -91,7 +92,7 @@ def zoomin():
 @app.route("/classification", methods=["POST"])
 @nocache
 def classification():
-    classification.work()
+    run_model.treeSegmentation() 
     return render_template("uploaded.html", file_path="img/img_now.jpg")
 
 

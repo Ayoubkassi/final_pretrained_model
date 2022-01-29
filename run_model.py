@@ -57,9 +57,9 @@ class CustomDataset(utils.Dataset):
         assert subset in ["train", "val"]
         dataset_dir = os.path.join(dataset_dir, subset)
         if subset == "train":
-            annotations1 = json.load(open('/dataset/train/train_annotation.json'))
+            annotations1 = json.load(open('dataset/train/train_annotation.json'))
         else :
-            annotations1 = json.load(open('/dataset/val/validation_annotation.json'))
+            annotations1 = json.load(open('dataset/val/validation_annotation.json'))
 
 
         annotations = list(annotations1.values())  # don't need the dict keys
@@ -136,7 +136,7 @@ def treeSegmentation():
 
 # Load validation dataset
 # Must call before using the dataset
-    CUSTOM_DIR = "/dataset"
+    CUSTOM_DIR = "dataset"
     dataset = CustomDataset()
     dataset.load_custom(CUSTOM_DIR, "val")
     dataset.prepare()
@@ -145,7 +145,7 @@ def treeSegmentation():
 
 
 
-    ROOT_DIR = "/"
+    ROOT_DIR = ""
 
     DEFAULT_LOGS_DIR = os.path.join(ROOT_DIR, "logs")
 
@@ -155,7 +155,7 @@ def treeSegmentation():
     #LOAD MODEL. Create model in inference mode
     model = modellib.MaskRCNN(mode="inference", model_dir=MODEL_DIR, config=config)
 
-    WEIGHTS_PATH = "/mask_rcnn_object_0004.h5"   
+    WEIGHTS_PATH = "mask_rcnn_object_0004.h5"   
 
 
     # Load COCO weights Or, load the last model you trained
