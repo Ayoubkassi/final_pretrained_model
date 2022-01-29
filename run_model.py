@@ -15,7 +15,7 @@ import tensorflow as tf
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import matplotlib.image as mpimg
-sys.path.append("/Mask_RCNN")
+sys.path.append("Mask_RCNN")
 from mrcnn import utils
 from mrcnn import visualize
 from mrcnn.visualize import display_images
@@ -120,9 +120,8 @@ class CustomDataset(utils.Dataset):
     
 
 def get_ax(rows=1, cols=1, size=16):
-  """Return a Matplotlib Axes array to be used in all visualizations in the notebook.  Provide a central point to control graph sizes. Adjust the size attribute to control how big to render images"""
-      _, ax = plt.subplots(rows, cols, figsize=(size*cols, size*rows))
-      return ax
+    _, ax = plt.subplots(rows, cols, figsize=(size*cols, size*rows))
+    return ax
 
 
 def treeSegmentation():
