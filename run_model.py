@@ -12,13 +12,14 @@ import math
 import re
 import time
 import tensorflow as tf
+from PIL import Image as im
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import matplotlib.image as mpimg
 sys.path.append("Mask_RCNN")
 from mrcnn import utils
 from mrcnn import visualize
-from mrcnn.visualize import display_images
+from mrcnn.visualize import display_images 
 from mrcnn.visualize import display_instances
 import mrcnn.model as modellib
 from mrcnn.model import log
@@ -182,19 +183,27 @@ def treeSegmentation():
     # Display results
     ax = get_ax(1)
     r1 = results1[0]
+    visualize.display_instances(image1, r1['rois'], r1['masks'], r1['class_ids'], dataset.class_names, r1['scores'], ax=ax, title="Predictions1")
     import sys
     sys.path.append("/Mask_RCNN")
+    from mrcnn.visualize import apply_mask , random_colors
     object_count = len(r1["class_ids"])
+    
+    mask = None
+    image2 = None
     for i in range(object_count):
         mask = r1["masks"][:, :, i]
         colors = random_colors(80)
-        from mrcnn.visualize import apply_mask , random_colors
         image3 = image1.copy()
         image2 = apply_mask(image3,mask,colors[0])
         image1 = image2.copy()
-        
-    return image2
+    from matplotlib import pyplot
+    pyplot.imshow(image2)
+    pyplot.show()
 
+
+   # data = im.fromarray(image2)
+   # data.save("static/img/img_now.jpg")
 
 #from matplotlib import pyplot
 #pyplot.imshow(image2)
