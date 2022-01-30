@@ -19,8 +19,7 @@ from mrcnn import model as modellib, utils
 # Path to trained weights file
 COCO_WEIGHTS_PATH = os.path.join(ROOT_DIR, "mask_rcnn_coco.h5")
 
-# Directory to save logs and model checkpoints, if not provided
-# through the command line argument --logs
+
 DEFAULT_LOGS_DIR = os.path.join(ROOT_DIR, "logs")
 
 
@@ -32,12 +31,11 @@ class CustomConfig(Config):
     # Give the configuration a recognizable name
     NAME = "object"
 
-    # We use a GPU with 12GB memory, which can fit two images.
-    # Adjust down if you use a smaller GPU.
+   
     IMAGES_PER_GPU = 2
 
     # Number of classes (including background)
-    NUM_CLASSES = 1 + 2  # Background + car and truck
+    NUM_CLASSES = 1 + 2  
 
     # Number of training steps per epoch
     STEPS_PER_EPOCH = 10
@@ -79,10 +77,7 @@ class CustomDataset(utils.Dataset):
         
         # Add images
         for a in annotations:
-            # print(a)
-            # Get the x, y coordinaets of points of the polygons that make up
-            # the outline of each object instance. There are stores in the
-            # shape_attributes (see json format above)
+            
             polygons = [r['shape_attributes'] for r in a['regions']] 
             objects = [s['region_attributes']['names'] for s in a['regions']]
             print("objects:",objects)
@@ -91,10 +86,7 @@ class CustomDataset(utils.Dataset):
             # key = tuple(name_dict)
             num_ids = [name_dict[a] for a in objects]
      
-            # num_ids = [int(n['Event']) for n in objects]
-            # load_mask() needs the image size to convert polygons to masks.
-            # Unfortunately, VIA doesn't include it in JSON, so we must read
-            # the image. This is only managable since the dataset is tiny.
+            
             print("numids",num_ids)
             image_path = os.path.join(dataset_dir, a['filename'])
             image = skimage.io.imread(image_path)
